@@ -15,4 +15,6 @@
 }
 html {
     background-color: antiquewhite;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
