@@ -32,7 +32,7 @@
 
         #videoContainer {
             width: 320px; /* Set your desired width here */
-            height: 240px; /* Set your desired height here */
+            height: 410px; /* Set your desired height here */
             overflow: hidden;
             margin: 0 auto;
         }
@@ -74,8 +74,9 @@
                     navigator.mediaDevices.getUserMedia({
                         video: {
                             width: { exact: 320 }, /* Set desired width */
-                            height: { exact: 240 } /* Set desired height */
+                            height: { exact: 410 } /* Set desired height */
                         }
+                        /*either 190x240 or 320x410*/
                     }).then(function (stream) {
                         currentStream = stream;
                         video.srcObject = currentStream;
