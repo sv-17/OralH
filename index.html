@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#501733">
+    <title>OralH</title>
+    <link rel="stylesheet" href="src/master.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/logo.png"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .contt {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+
+        .btn {
+            min-width: 150px;
+            margin: 5px 2px;
+            background-color: #7e1e86;
+            color: #fff;
+            border-radius: 2px;
+        }
+
+        #videoContainer {
+            width: 320px; /* Set your desired width here */
+            height: 240px; /* Set your desired height here */
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        #camera,
+        #myCanvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body onload="StartCamera();">
+    <div class="fullcontainer">
+        <div class="contt">
+            <p>OralH - Oral Hygiene Monitor</p>
+            <div id="videoContainer">
+                <video autoplay="true" id="camera"></video>
+                <canvas id="myCanvas" style="display: none;"></canvas>
+            </div>
+            <input class="btn" type="button" onclick="snapshot();" value="Click Image">
+            <input class="btn" type="button" onclick="download();" value="Generate Report">
+        </div>
+    </div>
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var video = document.getElementById("camera");
+        var canvas = document.getElementById("myCanvas");
+        var videoContainer = document.getElementById("videoContainer");
+        var camera = false;
+        let currentStream = null;
+        var capturedImage = false;
+        var btnStart = document.getElementById("btnStart");
+        var ctx = canvas.getContext('2d');
+        
+        function StartCamera() {
+            if (!camera) {
+                if (navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { exact: 320 }, /* Set desired width */
+                            height: { exact: 240 } /* Set desired height */
+                        }
+                    }).then(function (stream) {
+                        currentStream = stream;
+                        video.srcObject = currentStream;
+                        video.style.display = 'block';
+                        camera = true;
+                        btnStart.value = "Stop Camera";
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                }
+            } else {
+                camera = false;
+                currentStream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+                btnStart.value = "Start Camera";
+            }
+        }
+        
+        function snapshot() {
+            if (camera) {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                capturedImage = true;
+                
+                // Hide the video element
+                video.style.display = 'none';
+                
+                // Show the canvas element
+                canvas.style.display = 'block';
+            } else {
+                window.alert('Please start the camera');
+            }
+        }
+        
+        function download() {
+            if (capturedImage) {
+                // var link = document.createElement('a');
+                // link.download = 'Capture' + (Math.floor(Date.now() / 1000)) + '.jpg';
+                // link.href = document.getElementById('myCanvas').toDataURL('image/jpeg');
+                // link.click();
+                window.location.href = "report.html";
+            } else {
+                Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You did not capture an image yet!'
+                })
+            }
+        }
+    </script>
+</body>
+</html>
