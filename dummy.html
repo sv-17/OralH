@@ -96,8 +96,6 @@
         
         function snapshot() {
             if (camera) {
-                canvas.width = video.videoWidth; // Set canvas width to match video width
-                canvas.height = video.videoHeight; // Set canvas height to match video height
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 capturedImage = true;
                 
